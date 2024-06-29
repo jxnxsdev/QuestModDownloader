@@ -1,7 +1,7 @@
 {
+  "version": "0.1.0",
   "sharedDir": "shared",
   "dependenciesDir": "extern",
-  "version": "0.1.0",
   "info": {
     "name": "ModDownloader",
     "id": "moddl",
@@ -17,7 +17,9 @@
       "build": [
         "pwsh ./scripts/build.ps1"
       ],
-      "clean": ["pwsh ./scripts/build.ps1 -clean"],
+      "clean": [
+        "pwsh ./scripts/build.ps1 -clean"
+      ],
       "copy": [
         "pwsh ./scripts/copy.ps1 $0:?"
       ],
@@ -38,15 +40,14 @@
         "pwsh ./scripts/pull-tombstone.ps1"
       ]
     },
-    "qmodIncludeDirs": ["./build", "./extern/libs"],
+    "qmodIncludeDirs": [
+      "./build",
+      "./extern/libs"
+    ],
+    "qmodIncludeFiles": [],
     "qmodOutput": "./ModDownloader.qmod"
   },
   "dependencies": [
-    {
-      "id": "beatsaber-hook",
-      "versionRange": "^5.0.0",
-      "additionalData": {}
-    },
     {
       "id": "scotland2",
       "versionRange": "^0.1.4",
@@ -57,6 +58,56 @@
     {
       "id": "paper",
       "versionRange": "^3.0.0",
+      "additionalData": {}
+    },
+    {
+      "id": "web-utils",
+      "versionRange": "^0.5.2",
+      "additionalData": {}
+    },
+    {
+      "id": "rapidjson-macros",
+      "versionRange": "^1.2.1",
+      "additionalData": {}
+    },
+    {
+      "id": "libcurl",
+      "versionRange": "^8.7.1",
+      "additionalData": {}
+    },
+    {
+      "id": "bs-cordl",
+      "versionRange": "^3602.0.0",
+      "additionalData": {}
+    },
+    {
+      "id": "bsml",
+      "versionRange": "^0.4.21",
+      "additionalData": {}
+    },
+    {
+      "id": "custom-types",
+      "versionRange": "^0.17.7",
+      "additionalData": {}
+    },
+    {
+      "id": "custom-types",
+      "versionRange": "^0.17.7",
+      "additionalData": {}
+    },
+    {
+      "id": "libcurl",
+      "versionRange": "^8.7.1",
+      "additionalData": {}
+    },
+    {
+      "id": "beatsaber-hook",
+      "versionRange": "^5.1.8",
+      "additionalData": {}
+    },
+    {
+      "id": "kaleb",
+      "versionRange": "^0.1.9",
       "additionalData": {}
     }
   ]

@@ -58,6 +58,11 @@ add_library(
         SHARED
         ${cpp_file_list}
         ${c_file_list}
+        src/WebServer/WebServer.cpp
+        include/WebServer/WebServer.hpp
+        include/constants.hpp
+        src/ModSettingsViewController.cpp
+        include/ModSettingsViewController.hpp
 )
 
 # for inline hook
@@ -73,3 +78,5 @@ RECURSE_FILES(src_inline_hook_beatsaber_hook_local_extra_cpp ${EXTERN_DIR}/inclu
 
 target_sources(${COMPILE_ID} PRIVATE ${src_inline_hook_beatsaber_hook_local_extra_c})
 target_sources(${COMPILE_ID} PRIVATE ${src_inline_hook_beatsaber_hook_local_extra_cpp})
+
+include(assets_include.cmake)

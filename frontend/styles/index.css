@@ -1,0 +1,36 @@
+html {
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+}
+
+.installed-mod, .available-mod {
+    margin-bottom: 1rem;
+}
+
+.installed-mod-card {
+    min-width: 100%;
+}
+
+.installed-mod-card small {
+    color: var(--sl-color-neutral-500);
+}
+
+.installed-mod-card [slot='footer'] {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.available-mod-card {
+    min-width: 100%;
+}
+
+.available-mod-card small {
+    color: var(--sl-color-neutral-500);
+}
+
+.available-mod-card [slot='footer'] {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
