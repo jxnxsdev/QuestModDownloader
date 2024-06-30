@@ -1,9 +1,16 @@
-const baseUrl = 'http://127.0.0.1:2777/api/';
+const orginUrl = window.location.origin;
+const baseUrl = `${orginUrl}/api/`;
 
 const availableModsDiv = document.getElementById('available');
 const installedModsDiv = document.getElementById('installed');
 const version = document.getElementById('version');
+const alert = document.getElementById('alert');
+const spinner = document.getElementById('spinner');
 
+let inProgress = false;
+
+let mods = [];
+let installedMods = [];
 
 const availableModsHTML = `
 <div class="available-mod" id="{{MOD_CARD_ID}}">
@@ -15,10 +22,10 @@ const availableModsHTML = `
                     <small>{{MOD_DESC}}</small><br />
 
                     <div slot="footer">
-                        <sl-select style="width: 180px; height: 40px;" id="{{SELECT_ID}}">
+                        <select id="{{SELECT_ID}}" style="width: 180px; height: 40px; margin-right: 10px;">
                             {{SELECT_OPTIONS}}
-                        </sl-select>
-                        <sl-button style="width: 80px; height: 40px;" onClick="installMod('{{DOWNLOAD_MODID}}')">Install</sl-button>
+                        </select>
+                        <sl-button style="width: 80px; height: 40px;" variant="primary" onClick="installMod('{{DOWNLOAD_MODID}}')">Install</sl-button>
                     </div>
             </div>
 `
@@ -30,8 +37,8 @@ const installedModsHTML = `
                     <small>{{MOD_VERSION}}</small><br />
 
                     <div slot="footer">
-                        <sl-button style="width: 80px; height: 40px; margin-right: 10px;" onClick="uninstallMod('{{MOD_ID}}')">Remove</sl-button>
-                        <sl-button style="width: 80px; height: 40px;" onClick="updateMod('{{MOD_ID_2}}')" {{UPDATE_DISABLED}}>Update</sl-button>
+                        <sl-button style="width: 80px; height: 40px; margin-right: 10px;" variant="danger" onClick="uninstallMod('{{MOD_ID}}')">Remove</sl-button>
+                        <sl-button style="width: 80px; height: 40px;" variant="warning" onClick="updateMod('{{MOD_ID_2}}')" {{UPDATE_DISABLED}}>Update</sl-button>
                     </div>
                 </sl-card>
             </div>
@@ -52,24 +59,37 @@ async function fetchVersion() {
 fetchVersion();
 
 async function fetchAvailableMods() {
+    await fetchInstalledMods();
+
     const url = `${baseUrl}getMods`;
     const image404 = `/assets/404.jpg`
 
     const response = await fetch(url);
     const data = await response.json();
-    const mods = data.mods;
+    mods = data.mods;
 
     availableModsDiv.innerHTML = '<h2>Available Mods</h2>';
 
     mods.forEach(mod => {
+        if (installedMods.find(installedMod => installedMod.name === mod.id)) {
+            return;
+        }
+
+        if (installedMods.find(installedMod => installedMod.name === mod.name)) {
+            return;
+        }
+
+
         let selectOptions = '';
+        mod.versions.reverse();
         mod.versions.forEach(version => {
-            selectOptions += `<sl-menu-item value="${version.version}">${version.version}</sl-menu-item>`;
+            //selectOptions += `<sl-menu-item value="${version.version}">${version.version}</sl-menu-item>`;
+            selectOptions += `<option value="${version.version}">${version.version}</option>`;
         });
 
 
         const html = availableModsHTML
-            .replace('{{MOD_CARD_ID}}', "available" + mod.id)
+            .replace('{{MOD_CARD_ID}}', "available-" + mod.id)
             .replace('{{MOD_TITLE}}', mod.name)
             .replace('{{MOD_AUTHOR}}', mod.author)
             .replace('{{MOD_DESC}}', mod.description)
@@ -90,11 +110,13 @@ async function fetchInstalledMods() {
 
     const response = await fetch(url);
     const data = await response.json();
-    const mods = data.mods;
+    installedMods = data.mods;
+
+
 
     installedModsDiv.innerHTML = '<h2>Installed Mods</h2>';
 
-    mods.forEach(mod => {
+    installedMods.forEach(mod => {
         if(!mod.name.includes('com.beatgames.beatsaber')) {
             const html = installedModsHTML
                 .replace('{{MOD_CARD_ID}}', "installed-" + mod.name)
@@ -109,4 +131,31 @@ async function fetchInstalledMods() {
     });
 }
 
-fetchInstalledMods();
+async function getBusy() {
+    const url = `${baseUrl}isBusy`;
+    const response = await fetch(url);
+    const data = await response.json();
+    const isBusy = data.isBusy;
+    inProgress = isBusy;
+
+    if(isBusy) {
+        showAlert("Mod installation is currently in Progress, please wait...", "danger", 10000);
+        spinner.style.display = 'flex';
+    } else {
+        spinner.style.display = 'none';
+    }
+}
+
+getBusy();
+
+async function showAlert(message, type = "primary", duration = 5000) {
+    alert.variant = type;
+    alert.innerText = message;
+    alert.open = true;
+    alert.duration = duration;
+}
+
+async function reloadMods() {
+    console.log('reloading mods');
+    await fetchAvailableMods();
+}

@@ -1,6 +1,5 @@
 #include "WebServer/WebServer.hpp"
 #include "assets.hpp"
-#include "scotland2/shared/modloader.h"
 #include "constants.hpp"
 #include "web-utils/shared/DownloaderUtility.hpp"
 #include <iostream>
@@ -14,6 +13,8 @@
 
 namespace WebServer {
     bool wsrunning = false;
+
+    bool isBusy = false;
 
     bool downloadFrontend() {
         std::string ModDataDir = ModDownloader::Constants::ModDataDir;
@@ -155,22 +156,40 @@ namespace WebServer {
                 res.set_content(buffer.GetString(), "application/json");
             });
 
-            server.Get("/api/installMod", [](const httplib::Request& req, httplib::Response& res) {
+            server.Post("/api/installMod", [](const httplib::Request& req, httplib::Response& res) {
                 std::string downloadUrl = req.get_param_value("downloadUrl");
-
-                // TODO: Add download and install logic
-            });
-
-            server.Get("/api/uninstallMod", [](const httplib::Request& req, httplib::Response& res) {
-                std::string modId = req.get_param_value("modId");
+                isBusy = true;
 
                 // TODO: Add uninstall logic
+
+
+                isBusy = false;
+                std::string responseJson = "{\"success\": true, \"message\": \"Mod installed successfully\"}";
+                res.set_content(responseJson, "application/json");
             });
 
-            server.Get("/api/updateMod", [](const httplib::Request& req, httplib::Response& res) {
+            server.Post("/api/uninstallMod", [](const httplib::Request& req, httplib::Response& res) {
                 std::string modId = req.get_param_value("modId");
+                isBusy = true;
+
+                // TODO: Add uninstall logic
+
+
+                isBusy = false;
+                std::string responseJson = "{\"success\": true, \"message\": \"Mod uninstalled successfully\"}";
+                res.set_content(responseJson, "application/json");
+            });
+
+            server.Post("/api/updateMod", [](const httplib::Request& req, httplib::Response& res) {
+                std::string modId = req.get_param_value("modId");
+                isBusy = true;
 
                 // TODO: Add update logic
+
+
+                isBusy = false;
+                std::string responseJson = "{\"success\": true, \"message\": \"Mod updated successfully\"}";
+                res.set_content(responseJson, "application/json");
             });
 
             server.Get("/api/restartGame", [](const httplib::Request& req, httplib::Response& res) {
@@ -178,7 +197,8 @@ namespace WebServer {
             });
 
             server.Get("/api/getGameVersion", [](const httplib::Request& req, httplib::Response& res) {
-                std::string json = "{\"version\": \"" + ModDownloader::Constants::CurrentVersion + "\"}";
+                std::string json = "{\"version\": \"" + ModDownloader::Constants::ModVersion + "\"}";
+                res.set_content(json, "application/json");
             });
 
             server.Get("/api/getFrontendVersion", [](const httplib::Request& req, httplib::Response& res) {
@@ -187,6 +207,11 @@ namespace WebServer {
                 std::string version;
                 versionfile >> version;
                 std::string json = "{\"version\": \"" + version + "\"}";
+            });
+
+            server.Get("/api/isBusy", [](const httplib::Request& req, httplib::Response& res) {
+                std::string json = "{\"isBusy\": " + std::to_string(isBusy) + "}";
+                res.set_content(json, "application/json");
             });
 
             if (!success) {
