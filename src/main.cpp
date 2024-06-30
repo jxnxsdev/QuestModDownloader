@@ -4,6 +4,7 @@
 #include "bsml/shared/BSML.hpp"
 #include "ModSettingsViewController.hpp"
 #include "WebServer/WebServer.hpp"
+#include "InstallManager/MbfInterface.hpp"
 
 static modloader::ModInfo modInfo{MOD_ID, VERSION, 0};
 // Stores the ID and version of our mod, and is sent to
@@ -35,6 +36,8 @@ MOD_EXTERN_FUNC void late_load() noexcept {
   custom_types::Register();
   BSML::Init();
   BSML::Register::RegisterMainMenu("Manage Mods", "Manage Mods", "Download and uninstall Mods", DidActivate);
+
+  ModDownloader::InstallManager::MbfInterface::parseMods();
 
   WebServer::start();
 

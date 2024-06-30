@@ -63,6 +63,9 @@ add_library(
         include/constants.hpp
         src/ModSettingsViewController.cpp
         include/ModSettingsViewController.hpp
+        include/InstallManager/InstallManager.hpp
+        src/InstallManager/InstallManager.cpp
+        include/InstallManager/MbfInterface.hpp
 )
 
 # for inline hook

@@ -8,4 +8,5 @@ namespace ModDownloader::Constants {
     const std::string GithubRepo = "https://github.com/jxnxsdev/QuestModDownloader";
     const std::string ApiURL = "https://raw.githubusercontent.com/ComputerElite/ComputerElite.github.io/main/tools/Beat_Saber/mods.json";
     const std::string ModVersion = "1.37.0_9064817954";
+    const std::string MBFPath = "/sdcard/ModsBeforeFriday/Mods";
 }

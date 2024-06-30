@@ -157,7 +157,8 @@ namespace WebServer {
             });
 
             server.Post("/api/installMod", [](const httplib::Request& req, httplib::Response& res) {
-                std::string downloadUrl = req.get_param_value("downloadUrl");
+                std::string modId = req.get_param_value("modId");
+                std::string version = req.get_param_value("version");
                 isBusy = true;
 
                 // TODO: Add uninstall logic
