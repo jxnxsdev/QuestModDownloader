@@ -46,5 +46,6 @@ namespace IncludedAssets {
 	DECLARE_FILE(error_html)
 	DECLARE_FILE(installedmodcell_bmsl)
 	DECLARE_FILE(modmanagement_bsml)
+	DECLARE_FILE(nombf_html)
 
 }

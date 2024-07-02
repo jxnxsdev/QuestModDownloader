@@ -10,6 +10,7 @@
 #include "loaders/localloader.hpp"
 #include "loaders/loader.hpp"
 #include "UnityEngine/Application.hpp"
+#include "InstallManager/MbfInterface.hpp"
 
 namespace WebServer {
     bool wsrunning = false;
@@ -69,6 +70,18 @@ namespace WebServer {
         wsrunning = true;
         new std::thread([]() {
             httplib::Server server;
+
+            bool mbfModded = ModDownloader::InstallManager::MbfInterface::ensureMbfModded();
+
+            if (!mbfModded) {
+                PaperLogger.error("Failed to mod MBF");
+                server.Get("/", [](const httplib::Request& req, httplib::Response& res) {
+                    const std::string_view htmlContent = (const std::string_view &) IncludedAssets::nombf_html;
+                    res.set_content(htmlContent.data(), htmlContent.size(), "text/html");
+                });
+                server.listen("0.0.0.0", 2777);
+                return;
+            }
 
             bool success = false;
             std::string ModDataDir = ModDownloader::Constants::ModDataDir;
